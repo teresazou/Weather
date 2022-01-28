@@ -52,16 +52,29 @@ form{
     height: 100px;
     margin-top:12%
 }
-#city{
-    font-size:3em;
+#city_region{
+    display:flex;
+    flex-direction: row;
+    font-size:2em;
     font-family: 'Merriweather', serif;
-    justify-self: center;
-    align-self:center
-}
-#condition{
     justify-content: center;
     align-self:center;
+
+}
+
+#condition{
+    justify-content:center;
     margin-top:1em;
+    display:flex;
+    flex-direction: row;
+    row-gap: 5px;
+    align-items:flex-start;
+    align-content: center;
+}
+
+#condition_text{
+    padding-top:44px;
+   
 }
 #line{
     justify-content: center;
@@ -101,4 +114,8 @@ form{
 }
 #icon{
     color:none;
+}
+img{
+   
+    height:auto;
 }

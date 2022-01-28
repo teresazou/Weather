@@ -3,10 +3,11 @@ const submButt=document.getElementById('srbt')
 form.addEventListener('submit',handleSubmit)
 submButt.addEventListener('click',handleSubmit)
 
-function NewElem(current_id){
+function NewElem(current_id,parent_id){
     this.current_id=current_id
+    this.parent_id=parent_id
     this.createNew=function(){
-    let parent=document.getElementById("Result")
+    let parent=document.getElementById(parent_id)
     var element=document.createElement('div')
         text=document.createTextNode('')
         element.id=current_id
@@ -14,16 +15,18 @@ function NewElem(current_id){
         element.appendChild(text)
     }
     }
+new NewElem('city_region','Result').createNew()
+new NewElem('city','city_region').createNew()
+new NewElem('region','city_region').createNew()
+new NewElem('condition','Result').createNew()
+new NewElem('condition_text','condition').createNew()
 
-new NewElem('city').createNew()
-new NewElem('condition').createNew()
-new NewElem('icon').createNew()
-new NewElem('temp').createNew()
-new NewElem('line').createNew()
-new NewElem('time').createNew()
-
-new NewElem('feelslike').createNew()
-new NewElem('humidity').createNew()
+new NewElem('icon','Result').createNew()
+new NewElem('temp','Result').createNew()
+new NewElem('line','Result').createNew()
+new NewElem('time','Result').createNew()
+new NewElem('feelslike','Result').createNew()
+new NewElem('humidity','Result').createNew()
 
 
 function handleSubmit(e){
@@ -61,10 +64,13 @@ function ProcessData(web){
     
    var data={
      city: web.location.name.toUpperCase(),
+     country:web.location.country.toUpperCase(),
+     region:web.location.region.toUpperCase(),
      time:web.location.localtime,
      temp:Math.round(web.current.temp_f),
      is_day:web.current.is_day,
      condition:web.current.condition.text,
+     icon:web.current.condition.icon,
      
      feellike:Math.round(web.current.feelslike_f),
      humidity:web.current.humidity,
@@ -82,35 +88,31 @@ return data
 
 
  function Result(data){
-    // var title_city=document.getElementById('Title_city')
-    // var title_time=document.getElementById('Title_time')
-    // var title_temp=document.getElementById('Title_temp')
-    // var title_cond=document.getElementById('Title_condition')
-    
+   
+    var region=document.getElementById('region') 
 
     var city=document.getElementById('city')
     var time=document.getElementById('time')
-    
     var temp=document.getElementById('temp')
-    var cond=document.getElementById('condition')
+    var cond=document.getElementById('condition_text')
     var fl=document.getElementById('feelslike')
     var line=document.getElementById('line')
     var humidity=document.getElementById('humidity')
     
-    // title_time.innerHTML="Local Time: "
-    // title_temp.innerHTML="Current Temperature: "
-    // title_cond.innerHTML="Current Condition: "
-    // title_fl.innerHTML="Feels like: "
-
-
+   
+    if(data.country=="UNITED STATES OF AMERICA"){
+        region.innerHTML="  "+","+"  "+data.region
+    }else{ region.innerHTML="  "+","+"  "+data.country}
+    
     city.innerHTML=data.city
     temp.innerHTML=data.temp
-    cond.innerHTML=data.condition
+    cond.innerHTML=data.condition 
     fl.innerHTML="Feels like: "+ data.feellike
     humidity.innerHTML="Humidity: "+data.humidity
     
+    icon(data)
 
-    //change background pic
+    //change background pic depends on the time of the day
     day_night_background(data)
     
 
@@ -132,4 +134,20 @@ function day_night_background(data){
     document.body.style.backgroundSize="cover"
 
     }
+}
+
+function icon(data){
+var test_image=document.getElementById('image')
+if(test_image!=null){
+test_image.parentNode.removeChild(test_image)
+}
+icon_str=data.icon
+icon_num=icon_str.substring(icon_str.length-7)
+let parent=document.getElementById("condition")
+var img = document.createElement("img");
+img.id="image"
+if(data.is_day==0){
+    img.src = `icons/night/${icon_num}`;
+}else{ img.src=`icons/day/${icon_num}`;}
+parent.appendChild(img)
 }
